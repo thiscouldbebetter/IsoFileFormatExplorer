@@ -1,0 +1,66 @@
+<html>
+<body>
+
+<div id="divUI">
+
+	<h3>ISO File Format Explorer</h3>
+
+	<p>
+		Upload a valid .iso file to see its format as text.
+		This program has been tested on an Iso of Linux Mint version 18.3,
+		which is about 1.8 GiB.  Larger files may not load correctly.
+	</p>
+
+	<div>
+		<label>Iso File to Load:</label>
+		<input type="file" onchange="inputFile_Changed(this);"></input>
+	</div>
+
+	<div>
+		<label>File Contents:</label>
+		<br />
+		<textarea id="textareaFileContents" cols="80" rows="25"></textarea>
+	</div>
+
+</div>
+
+<script type="text/javascript" src="ByteStream.js"></script>
+<script type="text/javascript" src="ByteStreamBinaryStrings.js"></script>
+<script type="text/javascript" src="FileReaderLarge.js"></script>
+<script type="text/javascript" src="IsoFile.js"></script>
+<script type="text/javascript" src="IsoFileDateTimeLong.js"></script>
+<script type="text/javascript" src="IsoFileDateTimeShort.js"></script>
+<script type="text/javascript" src="IsoFileDirectoryEntry.js"></script>
+<script type="text/javascript" src="IsoFileDirectoryEntryFlags.js"></script>
+<script type="text/javascript" src="IsoFileString.js"></script>
+<script type="text/javascript" src="IsoFileVolumeDescriptor.js"></script>
+<script type="text/javascript" src="IsoFileVolumeDescriptor_BootRecord.js"></script>
+<script type="text/javascript" src="IsoFileVolumeDescriptor_Partition.js"></script>
+<script type="text/javascript" src="IsoFileVolumeDescriptor_Primary.js"></script>
+<script type="text/javascript" src="IsoFileVolumeDescriptor_Supplemental.js"></script>
+<script type="text/javascript" src="IsoFileVolumeDescriptor_Terminator.js"></script>
+<script type="text/javascript" src="IsoFileVolumeDescriptorType.js"></script>
+<script type="text/javascript" src="StringChunked.js"></script>
+
+<script type="text/javascript">
+
+// ui event handers
+
+function inputFile_Changed(inputFile)
+{
+	var file = inputFile.files[0];
+	var fileReader = new FileReaderLarge();
+	fileReader.readFileAsBinaryStrings(file, inputFile_Changed_FileLoaded);
+}
+
+function inputFile_Changed_FileLoaded(fileAsBinaryStrings)
+{
+	var fileAsIso = IsoFile.fromBinaryStrings(fileAsBinaryStrings);
+	var fileAsJSON = JSON.stringify(fileAsIso, null, 4); 
+	var textareaFileContents = document.getElementById("textareaFileContents");
+	textareaFileContents.value = fileAsJSON;
+}
+
+</script>
+</body>
+</html>
